@@ -52,6 +52,6 @@ INVEST:  73
 REWARD:  5
 ```
 
-At the moment this works only for GBs that you dont already have a fps invested.
+At the moment this works only for GBs that you dont already have fps invested in.
 
 Its totally safe to use as only server request responses are read, theres no way for Inno to know that you are using this.
