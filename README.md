@@ -19,10 +19,10 @@ pip install pychrome
 pip install tabulate
 ```
 
-4. Setup Chrome headless mode (chrome version >= 59):
+4. Setup Chrome with debugging (chrome version >= 59):
 
 ```
-google-chrome --headless --disable-gpu --remote-debugging-port=9222
+google-chrome --remote-debugging-port=9222
 ```
 
 Or for OSX:
@@ -31,7 +31,7 @@ Or for OSX:
 /Applications/Google\ Chrome\ 2.app/Contents/MacOS/Google\ Chrome  --remote-debugging-port=9222
 ```
 
-No other Chrome windows should be open before. Chrome window should be opened automatically after running this command and in it open the FOE world for which you would like to create MMR table. Once game is done loading
+No other Chrome windows should be open before. Chrome window should be opened automatically after running this command and in it open the FOE world. Once game is done loading
 
 5. In another terminal run python script:
 ```
