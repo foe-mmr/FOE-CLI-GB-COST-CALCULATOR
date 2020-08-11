@@ -9,10 +9,14 @@ File foe_snipe.py contains Python script that can be used to calculate if GB is 
 ```
 sudo apt install python-pip
 ```
-3. To install pychrome, simply:
+3. To install pychrome and tabulate, simply:
 
 ```
 pip install pychrome
+```
+
+```
+pip install tabulate
 ```
 
 4. Setup Chrome headless mode (chrome version >= 59):
