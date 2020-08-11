@@ -103,7 +103,7 @@ def processGB(responses):
         print "REWARD: ", return_data[1]
     else:
         cprint.cfg('k', 'r', 'b')
-        print cprint.out(NO PROFIT HERE :(')
+        print cprint.out('NO PROFIT HERE :(')
 
 def printSpots(rankings, remaining_fps):
     cprint = TextFormatter()
