@@ -21,6 +21,14 @@ pip install tabulate
 
 4. Setup Chrome with debugging (chrome version >= 59):
 
+If on Linux or MacOS you can use:
+
+```
+python open_chrome.py
+```
+
+that will open new chrome session with debuggind mode and you will not have to close all chrome windows. (Tested only on MacOS but shopuld work on Linux too)
+
 ```
 google-chrome --remote-debugging-port=9222
 ```
