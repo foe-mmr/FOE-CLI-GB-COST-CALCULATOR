@@ -72,7 +72,6 @@ class EventHandler:
                 hasGreatBuildingsService = True
 
             if hasCityMapService and hasGreatBuildingsService:
-                print "self.processGB(responses)"
                 self.processGB(responses)
 
             if rc == "BonusService" and rm == "getLimitedBonuses":
