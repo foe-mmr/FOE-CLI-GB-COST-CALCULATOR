@@ -39,14 +39,22 @@ Or for OSX:
 /Applications/Google\ Chrome\ 2.app/Contents/MacOS/Google\ Chrome  --remote-debugging-port=9222
 ```
 
-No other Chrome windows should be open before. Chrome window should be opened automatically after running this command and in it open the FOE world. Once game is done loading
+No other Chrome windows should be open before. Chrome window should be opened automatically after running this command.
 
 5. In another terminal run python script:
 ```
 python foe_snipe.py
 ```
 
-If everythings ok then you should see something like this in terminal after you have opened some GB:
+6. open FOE in browser and if everythings ok then you should see something like this in terminal:
+
+```
+ARC bonus:  90 %
+Open GB to use calculator
+```
+
+after you have opened some GB:
+
 ```
 #    Cost    Difference
 ---  ------  ------------
