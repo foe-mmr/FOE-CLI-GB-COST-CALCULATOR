@@ -79,7 +79,7 @@ class EventHandler:
                     if item["type"] == "contribution_boost":
                         bonus = (float(item["value"])+100)/100
 
-                        print(chr(27) + "[2J")
+                        printClear()
                         print "ARC bonus: ", item["value"],"%"
                         print "Open GB to use calculator"
 
@@ -112,17 +112,47 @@ class EventHandler:
             if rc == "GreatBuildingsService":
                 rankings = rd["rankings"]
 
-        print(chr(27) + "[2J")
+        printClear()
         return_data = self.printSpots(rankings, remaining_fps)
         print "Remaining FPs to level: ", remaining_fps
 
         if len(return_data) > 0:
-            cprint.cfg('g', 'k', 'b')
-            print "INVEST: ", cprint.out(return_data[0])
-            print "REWARD: ", return_data[1]
+            if return_data[0] > 0:
+                cprint.cfg('g', 'k', 'b')
+                print "INVEST: ", cprint.out(return_data[0])
+                print "REWARD: ", return_data[1]
+            else:
+                cprint.cfg('y', 'k', 'b')
+                print cprint.out('YOUR SPOT IS SAFE')
+                print "REWARD: ", return_data[1]
         else:
             cprint.cfg('k', 'r', 'b')
             print cprint.out('NO PROFIT HERE :(')
+
+    def hasFPsInvested(self, rankings):
+        fps_invested = 0
+
+        for r in rankings:
+            if 'is_self' in r["player"].keys() and r["player"]["is_self"]:
+                fps_invested = r["forge_points"]
+
+        return fps_invested
+
+    def secureSelf(self, rankings, remaining_fps):
+        fps_invested = 0
+        fps_next_spot = 0
+        to_lock_a_spot = 0
+
+        for thiselem,nextelem in zip(rankings, rankings[1 : ] + rankings[ : 1]):
+            if 'is_self' in thiselem["player"].keys() and thiselem["player"]["is_self"]:
+                fps_invested = thiselem["forge_points"]
+                fps_next_spot = nextelem["forge_points"]
+
+        if fps_next_spot > 0:
+            to_lock_a_spot = (remaining_fps + fps_invested - fps_next_spot)/2+fps_next_spot
+
+        return [fps_next_spot, to_lock_a_spot]
+
 
     def printSpots(self, rankings, remaining_fps):
         cprint = TextFormatter()
@@ -130,15 +160,23 @@ class EventHandler:
         table = []
         found_what_to_snipe = False
         return_data = []
+        found_self = False
+
+        fps_already_invested = self.hasFPsInvested(rankings)
 
         for r in rankings:
             rank = "-"
             name = ""
             forge_points = 0
             to_lock_a_spot = 0
+            total_fps_for_spot = 0
             reward = 0
-            profit = 0
+            profit = "LOCKED"
             profitable_spot = 0
+            is_self = False
+
+            if 'is_self' in r["player"].keys() and r["player"]["is_self"]:
+                is_self = True
 
             if 'rank' in r.keys():
                 rank = r["rank"]
@@ -147,43 +185,78 @@ class EventHandler:
                 if 'strategy_point_amount' in r["reward"].keys():
                     reward = int(round(float(r["reward"]["strategy_point_amount"])*self.ARC_bonus))
 
-            name = r["player"]["name"]
-
             if 'forge_points' in r.keys():
                 forge_points = r["forge_points"]
 
             cprint.cfg('w', 'k', 'f')
 
-            if forge_points >= remaining_fps and rank != '-':
-                cprint.cfg('r', 'k', 'b')
+            if not is_self:
+                if found_self and rank < 6:
+                    cprint.cfg('w', 'k', 'f')
 
-            if found_what_to_snipe == False and rank < 6 and forge_points < remaining_fps:
-                to_lock_a_spot = int(round(((float(remaining_fps) - forge_points) / 2) + forge_points))
-                profit = reward-to_lock_a_spot
+                    table.append([rank, cprint.out("-"), cprint.out("-")])
+                    continue
 
-                found_what_to_snipe = True
-                if profit > 0:
-                    cprint.cfg('g', 'k', 'x')
-                    return_data = [to_lock_a_spot, profit, rank]
-                else:
+                to_lock_a_spot = int(round((float(remaining_fps) + forge_points - fps_already_invested)/2))
+
+                if to_lock_a_spot + fps_already_invested <= forge_points:
                     cprint.cfg('r', 'k', 'b')
+                    to_lock_a_spot = "LOCKED"
+                else:
+                    profit = reward-to_lock_a_spot-fps_already_invested
+                    total_fps_for_spot = to_lock_a_spot
 
-            if rank == '-':
-                cprint.cfg('y', 'k', 'f')
+                    if fps_already_invested > 0:
+                        total_fps_for_spot = to_lock_a_spot+fps_already_invested
+                    if profit > 0:
+                        return_data = [to_lock_a_spot, profit, rank]
+                        cprint.cfg('g', 'k', 'x')
+
+                    found_what_to_snipe = True
+            else:
+                found_self = True
+                data = self.secureSelf(rankings, remaining_fps)
+                total_fps_for_spot = data[1]
+                to_lock_a_spot = data[1] - fps_already_invested
+                profit = reward-to_lock_a_spot-fps_already_invested
+
+                if profit > 0:
+                        return_data = [to_lock_a_spot, profit, rank]
+                        cprint.cfg('g', 'k', 'x')
+
+                if to_lock_a_spot < 1:
+                    cprint.cfg('y', 'k', 'b')
+                    found_what_to_snipe = True
+
+
 
             if rank < 6:
                 rank = cprint.out(rank)
                 name = cprint.out(name)
                 forge_points = cprint.out(forge_points)
-                to_lock_a_spot = cprint.out(to_lock_a_spot)
-                profit = cprint.out(profit)
+                if fps_already_invested > 0 and total_fps_for_spot > fps_already_invested:
+                    str_print = str(to_lock_a_spot)+" ("+str(total_fps_for_spot)+")"
+                    to_lock_a_spot = cprint.out(str_print)
+                else:
+                    to_lock_a_spot = cprint.out(to_lock_a_spot)
                 reward = cprint.out(reward)
+
+                if profit < 0:
+                    cprint.cfg('r', 'k', 'b')
+
+                profit = cprint.out(profit)
 
                 #table.append([rank, name, forge_points, to_lock_a_spot, reward, profit])
                 table.append([rank, to_lock_a_spot, profit])
+            
+
 
         print(tabulate(table, headers=['#', 'Cost', 'Difference']))
         return return_data
+
+def printClear(do_print = True):
+    if do_print:
+        print(chr(27) + "[2J")
 
 def main():
     init_FOE = True
@@ -191,7 +264,7 @@ def main():
 
     show_msg_1 = True
 
-    print(chr(27) + "[2J")
+    printClear()
     print "Open Chrome with remote debugger or run 'python open_chrome.py'"
     print "Then open FOE in that window"
 
@@ -219,7 +292,9 @@ def main():
                 tab.Network.enable()
 
                 init_FOE = False
-                print(chr(27) + "[2J")
+
+                printClear()
+
                 if eh.ARC_bonus == 0:
                     print "Please refresh FOE to get initial data about ARC bonus"
                 else:
