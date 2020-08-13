@@ -1,5 +1,7 @@
 # FOE Command Line GB Cost Calculator
 
+![Screenshot](screenshot.png)
+
 File foe_snipe.py contains Python script that can be used to calculate if GB is profitable for sniping
 
 1. First Clone or download repository or you can simply copy foe_snipe.py content and create new file. You will also need TextFormatter.py in same directory.
