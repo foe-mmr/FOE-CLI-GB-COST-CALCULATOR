@@ -93,7 +93,7 @@ Its totally safe to use as only server request responses are read, theres no way
 6. Open Chrome with debugging:
 
  ```
-run chrome --remote-debugging-port=9222
+start chrome --remote-debugging-port=9222
  ```
 
 7. Type this to run script:
