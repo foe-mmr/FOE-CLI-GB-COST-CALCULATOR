@@ -1,3 +1,5 @@
+from sys import platform
+
 # A python class definition for printing formatted text on terminal.
 # Initialize TextFormatter object like this:
 # >>> cprint = TextFormatter()
@@ -81,4 +83,7 @@ class TextFormatter:
  
     # output formatted string
     def out(self, string):
-        return self.format(string)
+        if platform != "win32":
+            return self.format(string)
+        else:
+            return string
