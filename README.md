@@ -89,8 +89,16 @@ Its totally safe to use as only server request responses are read, theres no way
   ```
 	C:\Python27\Scripts\pip.exe install tabulate
   ```
+  
+6. Open Chrome with debugging:
 
-6. Type to run script. change "YOUR-USER-NAME" to your actuall username or change path if you have downloaded it elsewhere : 
+ ```
+run chrome --remote-debugging-port=9222
+ ```
+
+7. Type this to run script:
   ```
 	C:\python27\python.exe C:\Users\YOUR-USER-NAME\Downloads\FOE-CLI-GB-COST-CALCULATOR-master\foe_snipe.py
   ```
+  
+  change "YOUR-USER-NAME" to your actuall username or change path if you have downloaded it elsewhere
