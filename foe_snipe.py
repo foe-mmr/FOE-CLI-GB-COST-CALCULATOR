@@ -148,7 +148,9 @@ class EventHandler:
         for thiselem,nextelem in zip(rankings, rankings[1 : ] + rankings[ : 1]):
             if 'is_self' in thiselem["player"].keys() and thiselem["player"]["is_self"]:
                 fps_invested = thiselem["forge_points"]
-                fps_next_spot = nextelem["forge_points"]
+                
+                if 'forge_points' in nextelem.keys():
+                    fps_next_spot = nextelem["forge_points"]
 
         if fps_next_spot > 0:
             to_lock_a_spot = (remaining_fps + fps_invested - fps_next_spot)/2+fps_next_spot
