@@ -3,6 +3,7 @@ import json
 from collections import OrderedDict
 from operator import getitem
 from TextFormatter import TextFormatter
+from sys import platform
 
 from tabulate import tabulate
 import ast
@@ -256,7 +257,10 @@ class EventHandler:
 
 def printClear(do_print = True):
     if do_print:
-        print(chr(27) + "[2J")
+        if platform != "win32":
+            print (chr(12))
+        else:
+            print(chr(27) + "[2J")
 
 def main():
     init_FOE = True
