@@ -1,3 +1,4 @@
+import os
 import pychrome
 import json
 from collections import OrderedDict
@@ -257,10 +258,7 @@ class EventHandler:
 
 def printClear(do_print = True):
     if do_print:
-        if platform != "win32":
-            print (chr(12))
-        else:
-            print(chr(27) + "[2J")
+        os.system('cls||clear')
 
 def main():
     init_FOE = True
