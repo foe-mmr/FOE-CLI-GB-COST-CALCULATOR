@@ -9,6 +9,12 @@ from sys import platform
 from tabulate import tabulate
 import ast
 
+import urllib2
+
+local_version = "v0.1.1"
+latest_version = ""
+github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
+
 class EventHandler:
     def __init__(self, tab, world):
         self.tab = tab
@@ -108,7 +114,10 @@ class EventHandler:
 
             if rc == "CityMapService":
                 forge_points_for_level_up = rd[0]["state"]["forge_points_for_level_up"]
-                invested_forge_points = rd[0]["state"]["invested_forge_points"]
+                if 'invested_forge_points' in rd[0]["state"].keys():
+                    invested_forge_points = rd[0]["state"]["invested_forge_points"]
+                else:
+                    invested_forge_points = 0
                 remaining_fps = forge_points_for_level_up - invested_forge_points
 
             if rc == "GreatBuildingsService":
@@ -131,6 +140,8 @@ class EventHandler:
             cprint.cfg('k', 'r', 'b')
             print cprint.out('NO PROFIT HERE :(')
 
+        updateWarning()
+
     def hasFPsInvested(self, rankings):
         fps_invested = 0
 
@@ -148,12 +159,11 @@ class EventHandler:
         for thiselem,nextelem in zip(rankings, rankings[1 : ] + rankings[ : 1]):
             if 'is_self' in thiselem["player"].keys() and thiselem["player"]["is_self"]:
                 fps_invested = thiselem["forge_points"]
-                
+
                 if 'forge_points' in nextelem.keys():
                     fps_next_spot = nextelem["forge_points"]
 
-        if fps_next_spot > 0:
-            to_lock_a_spot = (remaining_fps + fps_invested - fps_next_spot)/2+fps_next_spot
+        to_lock_a_spot = (remaining_fps + fps_invested - fps_next_spot)/2+fps_next_spot
 
         return [fps_next_spot, to_lock_a_spot]
 
@@ -202,6 +212,7 @@ class EventHandler:
                     continue
 
                 to_lock_a_spot = int(round((float(remaining_fps) + forge_points - fps_already_invested)/2))
+
 
                 if to_lock_a_spot + fps_already_invested <= forge_points:
                     cprint.cfg('r', 'k', 'b')
@@ -258,11 +269,27 @@ class EventHandler:
         print(tabulate(table, headers=['#', 'Cost', 'Difference']))
         return return_data
 
+
 def printClear(do_print = True):
     if do_print:
         os.system('cls||clear')
 
+def getVersion():
+    response = urllib2.urlopen("https://api.github.com/repos/foe-mmr/FOE-CLI-GB-COST-CALCULATOR/releases/latest")
+    data = json.load(response)
+    global latest_version
+    latest_version = data.get('tag_name')
+
+def updateWarning():
+    if local_version != latest_version:
+        print "!!!"
+        print "!!! You are not using Latest version of script"
+        print "!!! Please update to", latest_version
+        print github_url
+
 def main():
+    getVersion()
+
     init_FOE = True
     tabs = False
 
@@ -271,6 +298,8 @@ def main():
     printClear()
     print "Open Chrome with remote debugger or run 'python open_chrome.py'"
     print "Then open FOE in that window"
+
+    updateWarning()
 
     
     while init_FOE:
@@ -303,6 +332,8 @@ def main():
                     print "Please refresh FOE to get initial data about ARC bonus"
                 else:
                     print "Open GB"
+
+                updateWarning()
         
 if __name__ == '__main__':
     main()
