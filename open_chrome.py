@@ -12,8 +12,8 @@ def main():
 	    myCmd = 'RND_DIR=/tmp/$RANDOM; /Applications/Google\ Chrome\ 2.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=$RND_DIR; rm -R $RND_DIR'
 	    subprocess.call(myCmd,shell=True)
 	elif platform == "win32":
-	    # Windows...
-	    print "please try to figure out how to run this on Windows"
+	    myCmd = 'start chrome --remote-debugging-port=9222'
+	    subprocess.call(myCmd,shell=True)
 
 if __name__ == '__main__':
 	main()
