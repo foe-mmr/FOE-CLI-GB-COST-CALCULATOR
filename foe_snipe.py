@@ -11,9 +11,11 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.2"
+local_version = "v0.1.3"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
+
+otherPlayerOverview = []
 
 class EventHandler:
     def __init__(self, tab, world):
@@ -43,11 +45,8 @@ class EventHandler:
                 rc = data[0].get('requestClass')
                 rm = data[0].get('requestMethod')
 
-                if (rc == "GreatBuildingsService" and (rm == "getConstruction" or rm == "contributeForgePoints")) or (rc == "StartupService" and rm == "getData"):
+                if (rc == "GreatBuildingsService" and (rm == "getConstruction" or rm == "contributeForgePoints" or rm == "getOtherPlayerOverview")) or (rc == "StartupService" and rm == "getData"):
                     self.requestIds.append(requestId)
-
-            #if len(postdata) > 10:
-            #    postdatalist = json.loads(postdata)
 
         except Exception as e:
             pass
@@ -72,6 +71,11 @@ class EventHandler:
             rc = r.get('requestClass')
             rm = r.get('requestMethod')
             rd = r.get('responseData')
+
+            if rc == "GreatBuildingsService" and rm == "getOtherPlayerOverview":
+                global otherPlayerOverview
+                otherPlayerOverview = rd
+
 
             if rc == "CityMapService" and rm == "updateEntity":
                 hasCityMapService = True
@@ -110,6 +114,8 @@ class EventHandler:
         invested_forge_points = 0
         remaining_fps = 0
         rankings = {}
+        gb_name = False
+        player_name = False
 
         for r in responses:
             rc = r.get('requestClass')
@@ -124,6 +130,16 @@ class EventHandler:
                     invested_forge_points = 0
                 remaining_fps = forge_points_for_level_up - invested_forge_points
 
+                if 'player_id' in rd[0].keys() and 'id' in rd[0].keys():
+                    gb_id = rd[0]["id"]
+                    player_id = rd[0]["player_id"]
+
+                    for gb in otherPlayerOverview:
+                        if gb["entity_id"] == rd[0]["id"]:
+                            gb_name = gb["name"]
+                            player_name = gb["player"]["name"]
+
+
             if rc == "GreatBuildingsService" and rm == "getConstruction":
                 rankings = rd["rankings"]
 
@@ -131,6 +147,11 @@ class EventHandler:
                 rankings = rd
 
         printClear()
+
+        if gb_name and player_name:
+            print gb_name
+            print player_name,"\n"
+
         return_data = self.printSpots(rankings, remaining_fps)
         print "Remaining FPs to level: ", remaining_fps
 
@@ -250,8 +271,6 @@ class EventHandler:
                     cprint.cfg('y', 'k', 'b')
                     found_what_to_snipe = True
 
-
-
             if rank < 6:
                 rank = cprint.out(rank)
                 name = cprint.out(name)
@@ -270,8 +289,6 @@ class EventHandler:
 
                 #table.append([rank, name, forge_points, to_lock_a_spot, reward, profit])
                 table.append([rank, to_lock_a_spot, profit])
-            
-
 
         print(tabulate(table, headers=['#', 'Cost', 'Difference']))
         return return_data
