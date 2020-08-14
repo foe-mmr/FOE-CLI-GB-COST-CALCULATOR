@@ -11,7 +11,7 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.1"
+local_version = "v0.1.2"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
@@ -36,18 +36,18 @@ class EventHandler:
 
                 headers = request.get('headers')
                 postdata = request.get('postData')
-
+                postdataFixed = postdata.replace("true","True").replace("false","False").replace("null","None")
                 
-                data = ast.literal_eval(postdata)
+                data = ast.literal_eval(postdataFixed)
 
                 rc = data[0].get('requestClass')
                 rm = data[0].get('requestMethod')
 
-                if (rc == "GreatBuildingsService" and rm == "getConstruction") or rc == "StartupService" and rm == "getData":
+                if (rc == "GreatBuildingsService" and (rm == "getConstruction" or rm == "contributeForgePoints")) or (rc == "StartupService" and rm == "getData"):
                     self.requestIds.append(requestId)
 
-            if len(postdata) > 10:
-                postdatalist = json.loads(postdata)
+            #if len(postdata) > 10:
+            #    postdatalist = json.loads(postdata)
 
         except Exception as e:
             pass
@@ -73,10 +73,10 @@ class EventHandler:
             rm = r.get('requestMethod')
             rd = r.get('responseData')
 
-            if rc == "CityMapService":
+            if rc == "CityMapService" and rm == "updateEntity":
                 hasCityMapService = True
 
-            if rc == "GreatBuildingsService":
+            if rc == "GreatBuildingsService" and (rm == "getConstruction" or rm == "contributeForgePoints"):
                 hasGreatBuildingsService = True
 
             if hasCityMapService and hasGreatBuildingsService:
@@ -90,8 +90,12 @@ class EventHandler:
                         printClear()
                         print "ARC bonus: ", item["value"],"%"
                         print "Open GB to use calculator"
+                        updateWarning()
 
                         self.ARC_bonus = bonus
+                break
+
+            if hasCityMapService and hasGreatBuildingsService:
                 break
 
         self.requestIds.remove(requestId)
@@ -120,8 +124,11 @@ class EventHandler:
                     invested_forge_points = 0
                 remaining_fps = forge_points_for_level_up - invested_forge_points
 
-            if rc == "GreatBuildingsService":
+            if rc == "GreatBuildingsService" and rm == "getConstruction":
                 rankings = rd["rankings"]
+
+            if rc == "GreatBuildingsService" and rm == "contributeForgePoints":
+                rankings = rd
 
         printClear()
         return_data = self.printSpots(rankings, remaining_fps)
