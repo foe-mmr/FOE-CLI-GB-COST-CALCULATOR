@@ -11,7 +11,7 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.3"
+local_version = "v0.1.4"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
@@ -188,7 +188,7 @@ class EventHandler:
             if 'is_self' in thiselem["player"].keys() and thiselem["player"]["is_self"]:
                 fps_invested = thiselem["forge_points"]
 
-                if 'forge_points' in nextelem.keys():
+                if 'forge_points' in nextelem.keys() and 'rank' in nextelem.keys():
                     fps_next_spot = nextelem["forge_points"]
 
         to_lock_a_spot = (remaining_fps + fps_invested - fps_next_spot)/2+fps_next_spot
