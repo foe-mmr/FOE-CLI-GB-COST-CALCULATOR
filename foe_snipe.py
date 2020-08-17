@@ -11,7 +11,7 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.4"
+local_version = "v0.1.5"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
@@ -220,7 +220,7 @@ class EventHandler:
             if 'is_self' in r["player"].keys() and r["player"]["is_self"]:
                 is_self = True
 
-            if 'rank' in r.keys():
+            if 'rank' in r.keys() and r["rank"] > 0:
                 rank = r["rank"]
 
             if 'reward' in r.keys():
@@ -252,10 +252,12 @@ class EventHandler:
                     if fps_already_invested > 0:
                         total_fps_for_spot = to_lock_a_spot+fps_already_invested
                     if profit > 0:
-                        return_data = [to_lock_a_spot, profit, rank]
-                        cprint.cfg('g', 'k', 'x')
-
-                    found_what_to_snipe = True
+                        if found_what_to_snipe == False:
+                            return_data = [to_lock_a_spot, profit, rank]
+                            cprint.cfg('g', 'k', 'b')
+                            found_what_to_snipe = True
+                        else:
+                            cprint.cfg('g', 'k')
             else:
                 found_self = True
                 data = self.secureSelf(rankings, remaining_fps)
@@ -264,11 +266,16 @@ class EventHandler:
                 profit = reward-to_lock_a_spot-fps_already_invested
 
                 if profit > 0:
-                        return_data = [to_lock_a_spot, profit, rank]
-                        cprint.cfg('g', 'k', 'x')
+                        if found_what_to_snipe == False:
+                            return_data = [to_lock_a_spot, profit, rank]
+                            cprint.cfg('g', 'k', 'b')
+                            found_what_to_snipe = True
+                        else:
+                            cprint.cfg('g', 'k')
 
                 if to_lock_a_spot < 1:
                     cprint.cfg('y', 'k', 'b')
+                    to_lock_a_spot = "SAFE"
                     found_what_to_snipe = True
 
             if rank < 6:
