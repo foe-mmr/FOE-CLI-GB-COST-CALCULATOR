@@ -11,7 +11,7 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.5"
+local_version = "v0.1.6"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
