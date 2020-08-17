@@ -264,6 +264,8 @@ class EventHandler:
                 total_fps_for_spot = data[1]
                 to_lock_a_spot = data[1] - fps_already_invested
                 profit = reward-to_lock_a_spot-fps_already_invested
+                if fps_already_invested > to_lock_a_spot:
+                    profit = reward - fps_already_invested
 
                 if profit > 0:
                         if found_what_to_snipe == False:
