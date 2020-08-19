@@ -11,7 +11,7 @@ import ast
 
 import urllib2
 
-local_version = "v0.1.6"
+local_version = "v0.1.7"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
@@ -264,7 +264,7 @@ class EventHandler:
                 total_fps_for_spot = data[1]
                 to_lock_a_spot = data[1] - fps_already_invested
                 profit = reward-to_lock_a_spot-fps_already_invested
-                if fps_already_invested > to_lock_a_spot:
+                if fps_already_invested > total_fps_for_spot:
                     profit = reward - fps_already_invested
 
                 if profit > 0:
