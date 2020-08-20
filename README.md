@@ -4,7 +4,9 @@
 
 File foe_snipe.py contains Python script that can be used to calculate if GB is profitable for sniping
 
-1. First Clone or download repository or you can simply copy foe_snipe.py content and create new file. You will also need TextFormatter.py in same directory.
+1. First Clone or download repository.
+
+**Script will check for pip, pychrome, tabulate and will try to install them if they are not found but if that fails you need to do steps 2, 3 manually.**
 
 2. Install (if not already installed) pip for Python 2 with:
 
