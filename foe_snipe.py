@@ -1,17 +1,24 @@
 import os
-import pychrome
 import json
 from collections import OrderedDict
 from operator import getitem
 from TextFormatter import TextFormatter
 from sys import platform
-
-from tabulate import tabulate
 import ast
-
 import urllib2
 
-local_version = "v0.1.7"
+from pyInstall import installIfNeeded
+
+def log(message):
+    print(str(message))
+
+installIfNeeded("pychrome", notes = "", log = log)
+installIfNeeded("tabulate", notes = "", log = log)
+
+import pychrome
+from tabulate import tabulate
+
+local_version = "v0.1.8"
 latest_version = ""
 github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
@@ -296,7 +303,6 @@ class EventHandler:
 
                 profit = cprint.out(profit)
 
-                #table.append([rank, name, forge_points, to_lock_a_spot, reward, profit])
                 table.append([rank, to_lock_a_spot, profit])
 
         print(tabulate(table, headers=['#', 'Cost', 'Difference']))
@@ -329,8 +335,7 @@ def main():
     show_msg_1 = True
 
     printClear()
-    print "Open Chrome with remote debugger or run 'python open_chrome.py'"
-    print "Then open FOE in that window"
+    print "Open FOE in Chrome with remote debugger on or run 'python open_chrome.py'"
 
     updateWarning()
 
