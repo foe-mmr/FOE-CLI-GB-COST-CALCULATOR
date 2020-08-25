@@ -164,22 +164,33 @@ class EventHandler:
 
         return_data = self.printSpots(rankings, remaining_fps)
 
-        #print "Remaining FPs to level: ", remaining_fps
-        remaining_fps_txt = "Remaining FPs to level: "+ str(remaining_fps)
+        print "Remaining FPs to level: ", remaining_fps
+        remaining_fps_txt = "Remaining FPs to level: " + str(remaining_fps)
         updateGUI("remainingFPs", remaining_fps_txt)
 
         if len(return_data) > 0:
             if return_data[0] > 0:
                 cprint.cfg('g', 'k', 'b')
                 print "INVEST: ", cprint.out(return_data[0])
+                invest_text = "INVEST: " + str(return_data[0])
+                reward_text = "REWARD: " + str(return_data[1])
+
+                updateGUI("investText", invest_text)
+                updateGUI("profitText", reward_text)
                 print "REWARD: ", return_data[1]
             else:
                 cprint.cfg('y', 'k', 'b')
                 print cprint.out('YOUR SPOT IS SAFE')
                 print "REWARD: ", return_data[1]
+
+                updateGUI("investText", 'YOUR SPOT IS SAFE')
+                reward_text = "REWARD: " + str(return_data[1])
+                updateGUI("profitText", reward_text)
         else:
             cprint.cfg('k', 'r', 'b')
             print cprint.out('NO PROFIT HERE :(')
+            updateGUI("investText", 'NO PROFIT HERE :(')
+            updateGUI("profitText", "")
 
         updateWarning()
 
@@ -338,6 +349,8 @@ def updateWarning():
         print "!!! You are not using Latest version of script"
         print "!!! Please update to", latest_version
         print github_url
+
+        updateGUI("warningText", "You are not using Latest version of script\n Please update to "+latest_version+"\n"+github_url)
 
 def main():
     getVersion()
