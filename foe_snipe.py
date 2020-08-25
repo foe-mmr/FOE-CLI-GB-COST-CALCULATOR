@@ -327,7 +327,7 @@ class EventHandler:
         return return_data
 
 
-def printClear(do_print = False):
+def printClear(do_print = True):
     if do_print:
         os.system('cls||clear')
 
