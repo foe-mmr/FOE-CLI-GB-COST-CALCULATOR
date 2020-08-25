@@ -82,7 +82,9 @@ class TextFormatter:
         return '\x1b[%sm%s\x1b[0m' % (';'.join(w), string) if w else string
  
     # output formatted string
-    def out(self, string):
+    def out(self, string, no_formatting=False):
+        return string
+
         if platform != "win32":
             return self.format(string)
         else:
