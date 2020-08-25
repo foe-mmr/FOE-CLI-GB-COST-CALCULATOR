@@ -15,6 +15,7 @@ def log(message):
 
 installIfNeeded("pychrome", notes = "", log = log)
 installIfNeeded("tabulate", notes = "", log = log)
+installIfNeeded("mttkinter", notes = "", log = log)
 
 import pychrome
 from tabulate import tabulate
