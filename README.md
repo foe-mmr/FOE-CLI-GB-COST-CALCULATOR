@@ -13,7 +13,7 @@ File foe_snipe.py contains Python script that can be used to calculate if GB is 
 ```
 sudo apt install python-pip
 ```
-3. To install pychrome and tabulate, simply:
+3. To install pychrome and tabulate and mttkinter, simply:
 
 ```
 pip install pychrome
@@ -21,6 +21,10 @@ pip install pychrome
 
 ```
 pip install tabulate
+```
+
+```
+pip install mttkinter
 ```
 
 4. Setup Chrome with debugging (chrome version >= 59):
