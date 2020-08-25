@@ -8,6 +8,7 @@ import ast
 import urllib2
 
 from pyInstall import installIfNeeded
+from pyGUI import PyGUI
 
 def log(message):
     print(str(message))
@@ -24,11 +25,13 @@ github_url = "https://github.com/foe-mmr/FOE-CLI-GB-COST-CALCULATOR"
 
 otherPlayerOverview = []
 
+py_gui = PyGUI(local_version)
+
 class EventHandler:
     def __init__(self, tab, world):
         self.tab = tab
         self.world = world
-        self.ARC_bonus = 0
+        self.ARC_bonus = 1.942
         self.request_cnt = 0
 
         self.requestIds = []
@@ -156,24 +159,38 @@ class EventHandler:
         printClear()
 
         if gb_name and player_name:
-            print gb_name
-            print player_name,"\n"
+            updateGUI("gbTitle", gb_name)
+            updateGUI("gbOwnerName", player_name)
 
         return_data = self.printSpots(rankings, remaining_fps)
+
         print "Remaining FPs to level: ", remaining_fps
+        remaining_fps_txt = "Remaining FPs to level: " + str(remaining_fps)
+        updateGUI("remainingFPs", remaining_fps_txt)
 
         if len(return_data) > 0:
             if return_data[0] > 0:
                 cprint.cfg('g', 'k', 'b')
                 print "INVEST: ", cprint.out(return_data[0])
+                invest_text = "INVEST: " + str(return_data[0])
+                reward_text = "REWARD: " + str(return_data[1])
+
+                updateGUI("investText", invest_text)
+                updateGUI("profitText", reward_text)
                 print "REWARD: ", return_data[1]
             else:
                 cprint.cfg('y', 'k', 'b')
                 print cprint.out('YOUR SPOT IS SAFE')
                 print "REWARD: ", return_data[1]
+
+                updateGUI("investText", 'YOUR SPOT IS SAFE')
+                reward_text = "REWARD: " + str(return_data[1])
+                updateGUI("profitText", reward_text)
         else:
             cprint.cfg('k', 'r', 'b')
             print cprint.out('NO PROFIT HERE :(')
+            updateGUI("investText", 'NO PROFIT HERE :(')
+            updateGUI("profitText", "")
 
         updateWarning()
 
@@ -306,12 +323,19 @@ class EventHandler:
                 table.append([rank, to_lock_a_spot, profit])
 
         print(tabulate(table, headers=['#', 'Cost', 'Difference']))
+        updateGUI("table", table)
         return return_data
 
 
 def printClear(do_print = True):
     if do_print:
         os.system('cls||clear')
+
+def updateGUI(field, val, use_gui = True):
+    if use_gui:
+        py_gui.updateVal(field, val)
+    else:
+        print val
 
 def getVersion():
     response = urllib2.urlopen("https://api.github.com/repos/foe-mmr/FOE-CLI-GB-COST-CALCULATOR/releases/latest")
@@ -325,6 +349,8 @@ def updateWarning():
         print "!!! You are not using Latest version of script"
         print "!!! Please update to", latest_version
         print github_url
+
+        updateGUI("warningText", "You are not using Latest version of script\n Please update to "+latest_version+"\n"+github_url)
 
 def main():
     getVersion()
@@ -372,7 +398,7 @@ def main():
                     print "Open GB"
 
                 updateWarning()
-        
+
 if __name__ == '__main__':
     main()
     raw_input()
