@@ -32,7 +32,7 @@ class EventHandler:
     def __init__(self, tab, world):
         self.tab = tab
         self.world = world
-        self.ARC_bonus = 1.942
+        self.ARC_bonus = 0
         self.request_cnt = 0
 
         self.requestIds = []
