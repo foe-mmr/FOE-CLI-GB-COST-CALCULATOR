@@ -8,7 +8,6 @@ import ast
 import urllib2
 
 from pyInstall import installIfNeeded
-from pyGUI import PyGUI
 
 def log(message):
     print(str(message))
@@ -16,6 +15,8 @@ def log(message):
 installIfNeeded("pychrome", notes = "", log = log)
 installIfNeeded("tabulate", notes = "", log = log)
 installIfNeeded("mttkinter", notes = "", log = log)
+
+from pyGUI import PyGUI
 
 import pychrome
 from tabulate import tabulate

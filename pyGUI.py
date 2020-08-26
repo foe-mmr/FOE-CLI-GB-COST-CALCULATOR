@@ -3,7 +3,6 @@ import tktable
 
 class PyGUI:
 	def __init__(self, version):
-		print "INIT"
 		self.root = mtTkinter.Tk(className=version+' FOE CLI GB Calculator')
 		self.root.geometry("250x350")
 
