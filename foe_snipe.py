@@ -106,6 +106,8 @@ class EventHandler:
                         printClear()
                         print "ARC bonus: ", item["value"],"%"
                         print "Open GB to use calculator"
+                        updateGUI("gbTitle", "ARC bonus: " + str(item["value"]) + "%")
+                        updateGUI("gbOwnerName", "Open GB to use calculator")
                         updateWarning()
 
                         self.ARC_bonus = bonus
@@ -118,6 +120,7 @@ class EventHandler:
 
     def processGB(self, responses):
         if self.ARC_bonus == 0:
+            updateGUI("gbTitle", "Please refresh FOE to get initial data about ARC bonus")
             print "Please refresh FOE to get initial data about ARC bonus"
             return False
 
@@ -159,6 +162,9 @@ class EventHandler:
                 rankings = rd
 
         printClear()
+
+        updateGUI("gbTitle", "")
+        updateGUI("gbOwnerName", "")
 
         if gb_name and player_name:
             updateGUI("gbTitle", gb_name)
@@ -396,6 +402,7 @@ def main():
 
                 if eh.ARC_bonus == 0:
                     print "Please refresh FOE to get initial data about ARC bonus"
+                    updateGUI("gbTitle", "Please refresh FOE to get initial data about ARC bonus")
                 else:
                     print "Open GB"
 

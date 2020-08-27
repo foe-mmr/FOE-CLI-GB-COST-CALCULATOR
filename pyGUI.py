@@ -3,7 +3,8 @@ import tktable
 
 class PyGUI:
 	def __init__(self, version):
-		self.root = mtTkinter.Tk(className=version+' FOE CLI GB Calculator')
+		self.root = mtTkinter.Tk(className='FOECLIGBCalculator')
+		self.root.title(version+' FOE CLI GB Calculator')
 		self.root.geometry("250x350")
 
 		self.version = version
@@ -77,10 +78,10 @@ class PyGUI:
 			row_count+=1
 
 	def createWindow(self):
-		lb_gbTitle = mtTkinter.Label(self.root, textvariable=self.gbTitle)
+		lb_gbTitle = mtTkinter.Label(self.root, textvariable=self.gbTitle, wraplength=240)
 		lb_gbTitle.pack(side='top', fill='x')
 
-		lb_gbOwnerName = mtTkinter.Label(self.root, textvariable=self.gbOwnerName)
+		lb_gbOwnerName = mtTkinter.Label(self.root, textvariable=self.gbOwnerName, wraplength=240)
 		lb_gbOwnerName.pack()
 
 		values = [['1','-','-'],
