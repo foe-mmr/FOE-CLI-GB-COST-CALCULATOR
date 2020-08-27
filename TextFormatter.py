@@ -83,8 +83,8 @@ class TextFormatter:
  
     # output formatted string
     def out(self, string, no_formatting=False):
-        return string
-
+        return self.format(string)
+        
         if platform != "win32":
             return self.format(string)
         else:
